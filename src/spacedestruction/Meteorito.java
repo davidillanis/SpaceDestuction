@@ -1,5 +1,6 @@
 package spacedestruction;
 
+import Exceptions.SongException;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
@@ -52,10 +53,11 @@ public class Meteorito extends Obstaculo{
     @Override public void Animar(){
         PosicicionObjeto(getDimencion(), getMain().personaje.getDimencion());
         if(IsCoalicion(getMain().personaje.getDimencion())){
-            getMain().sonido.NewStartSong(SONG_OBTION.inpacto1);
-            if(getMain().sonido.HasSongFinished(SONG_OBTION.inpacto1)){
-                getMain().sonido.StopSong(SONG_OBTION.inpacto1);
-            }
+            try{
+            getMain().sonido.restartSong("inpacto1.wav");
+            getMain().sonido.startSong("inpacto1.wav");
+            
+            }catch(SongException ex){System.out.println(ex);}
             getMain().personaje.setVida(getMain().personaje.getVida()-danio);
             switch (pos) {//el 10 es para aumentar la velocidad del meteorito al hacer una coalicion
                 case arriba:

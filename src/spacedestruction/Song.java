@@ -8,7 +8,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-/*@author Abel123*/
+/*@author Abel123, no lo utilizo*/
 enum SONG_OBTION{
     derrota(1,"src/song/derrota.wav"), disparo(2,"src/song/disparo.wav"), fondo1(3,"src/song/fondo1.wav"), 
     fondo2(4,"src/song/fondo2.wav"), inpacto1(5,"src/song/inpacto1.wav"), item1(6,"src/song/item1.wav"), 

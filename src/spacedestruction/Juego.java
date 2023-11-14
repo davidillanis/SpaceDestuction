@@ -1,9 +1,13 @@
 package spacedestruction;
 
+import Exceptions.SongException;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Juego extends JPanel {
@@ -13,7 +17,8 @@ public class Juego extends JPanel {
     public ImageIcon img_heart, img_speed;
     public List<Meteorito> list_meteorito=new ArrayList<>();
     public Obstaculo2 speed;
-    public Song sonido=new Song();
+    //public Song sonido=new Song();
+    public PluralSoundControl sonido;
     public int score=1;
     //hilos
     private Thread hilo_speed;
@@ -23,6 +28,11 @@ public class Juego extends JPanel {
     
     public Juego() {
         setLayout(new BorderLayout());
+        try {
+            sonido=new PluralSoundControl(new File("src/song/"));
+        } catch (SongException ex) {
+            Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+        }
         star_animation = new StarAnimation(new ImageIcon("src/images/star_1.png"));
         personaje = new Personaje(this);
         list_meteorito.add(new Meteorito(this));
@@ -48,11 +58,13 @@ public class Juego extends JPanel {
                     try {
                         Thread.sleep(10);
                         //sonido
-                        if((sonido.isPlayingMusic(SONG_OBTION.fondo1) || sonido.isPlayingMusic(SONG_OBTION.fondo2))==false){
+                        if((sonido.isPlayingSong("fondo1.wav") || sonido.isPlayingSong("fondo2.wav"))==false){
                             if((int)(Math.random()*4)%2==0){
-                                sonido.NewStartSong(SONG_OBTION.fondo1);
+                                sonido.restartSong("fondo1.wav");
+                                sonido.startSong("fondo1.wav");
                             }else{
-                                sonido.NewStartSong(SONG_OBTION.fondo2);
+                                sonido.restartSong("fondo2.wav");
+                                sonido.startSong("fondo2.wav");
                             }
                         }
                         //
@@ -72,6 +84,8 @@ public class Juego extends JPanel {
                         }
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
+                    } catch (SongException ex) {
+                        System.out.println(ex);
                     }
                 }
             }
@@ -81,7 +95,7 @@ public class Juego extends JPanel {
             while(!Thread.currentThread().isInterrupted()){
                 try {
                     list_meteorito.stream().forEach(e->{e.Animar();});
-                    if(cont%1200==0){
+                    if(cont%500==0){
                         list_meteorito.add(new Meteorito(Juego.this));
                         cont=0;
                         repaint();

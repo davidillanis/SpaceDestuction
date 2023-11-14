@@ -1,5 +1,6 @@
 package spacedestruction;
 
+import Exceptions.SongException;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
@@ -53,36 +54,31 @@ public class Obstaculo2 extends Obstaculo implements Runnable{
         double y=(var_y*Math.sin(x/var_x))-var_y;
         return (int)(y*-1);
     }
-    public void LogicaCoalicion(){
+    public void LogicaCoalicion() throws SongException{
         switch (obc) {
             case speed:
                 if(getMain().personaje.getSpeed()<50){
                     getMain().personaje.setSpeed(getMain().personaje.getSpeed()+1);//aumentar la velocidad del personaje
                     
-                    getMain().sonido.NewStartSong(SONG_OBTION.item1);//SONIDO
-                    if(getMain().sonido.HasSongFinished(SONG_OBTION.item1)){
-                         getMain().sonido.StopSong(SONG_OBTION.item1);
-                    }//SONIDO
+                    getMain().sonido.restartSong("item1.wav");
+                    getMain().sonido.startSong("item1.wav");//SONIDO
                 }
                 break;
             case heart:
                 if(getMain().personaje.getVida()<=100){
                     getMain().personaje.setVida(getMain().personaje.getVida()+5);//aumentar la vida del personaje
                     
-                    getMain().sonido.NewStartSong(SONG_OBTION.item2);//SONIDO
-                    if(getMain().sonido.HasSongFinished(SONG_OBTION.item2)){
-                         getMain().sonido.StopSong(SONG_OBTION.item2);
-                    }//SONIDO
+                    getMain().sonido.restartSong("item2.wav");
+                    getMain().sonido.startSong("item2.wav");//SONIDO
                 }
                 break;
             case reduce_speed:
                 
                 if(getMain().personaje.getSpeed()>1){
                     getMain().personaje.setSpeed(getMain().personaje.getSpeed()-1);//reducir la velocidad del personaje
-                    getMain().sonido.NewStartSong(SONG_OBTION.item3);//SONIDO
-                    if(getMain().sonido.HasSongFinished(SONG_OBTION.item3)){
-                        getMain().sonido.StopSong(SONG_OBTION.item3);
-                    }//SONIDO
+                    
+                    getMain().sonido.restartSong("item2.wav");
+                    getMain().sonido.startSong("item2.wav");//SONIDO
                 }else{
                     getMain().personaje.setSpeed(1);
                 }
@@ -140,6 +136,8 @@ public class Obstaculo2 extends Obstaculo implements Runnable{
                 Thread.sleep(FuncionVelocidad(getMain().personaje.getSpeed()));
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
+            } catch(SongException e){
+                System.out.println(e);
             }
         }
     }
